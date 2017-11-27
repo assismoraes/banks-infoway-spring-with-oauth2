@@ -1,4 +1,4 @@
-package com.assismoraes.bank;
+package com.assismoraes.bank.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
