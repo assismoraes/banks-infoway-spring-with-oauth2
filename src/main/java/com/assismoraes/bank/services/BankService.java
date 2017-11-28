@@ -18,6 +18,9 @@ public class BankService {
 	@Autowired
 	private BankRepo repo;
 	
+	@Autowired
+	private BranchService branchService;
+	
 	public Object save(Bank bank) {
 		bank.setBranches(new ArrayList<Branch>());
 		return this.repo.save(bank);
@@ -45,6 +48,7 @@ public class BankService {
 		Bank bank = this.repo.findOne(bankId);
 		branch.setAccounts(new ArrayList<Account>());
 		if(bank != null){
+			branch.setNumber(this.branchService.generateBranchNumber());
 			bank.getBranches().add(branch);
 			this.repo.save(bank);
 		}

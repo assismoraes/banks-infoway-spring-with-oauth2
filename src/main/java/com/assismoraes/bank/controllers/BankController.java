@@ -39,7 +39,8 @@ public class BankController {
 	public Object save(@Validated @RequestBody Bank bank, Errors errors) {
 		if(errors.hasErrors())
 			return BankErrors.formatErrors(errors);
-		return this.service.save(bank);
+		this.service.save(bank);
+		return "success";
 	}
 	
 	/**
@@ -52,7 +53,8 @@ public class BankController {
 	public Object update(@Validated @RequestBody Bank bank, Errors errors) {
 		if(errors.hasErrors())
 			return BankErrors.formatErrors(errors);
-		return this.service.update(bank);
+		this.service.update(bank);
+		return "success";
 	}	
 	
 	/**
@@ -60,7 +62,7 @@ public class BankController {
 	 * @param id
 	 * @return Bank
 	 */
-	@RequestMapping(value="{id}")
+	@RequestMapping(value="{id}", method=RequestMethod.GET)
 	public Bank show(@PathVariable("id") Long id) {
 		return this.service.find(id);
 	}

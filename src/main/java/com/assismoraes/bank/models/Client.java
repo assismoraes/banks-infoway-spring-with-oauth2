@@ -2,33 +2,24 @@ package com.assismoraes.bank.models;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
 public class Client {
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
 	
 	@NotEmpty(message="O nome é obrigatório")
 	private String name;	
 	
 	@NotEmpty(message="O CPF é obrigatório")
+	@NotNull(message="O CPF é obrigatório")
 	@Column(unique=true)
+	@CPF(message="CPF inválido")
+	@Id
 	private String registerNumber;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

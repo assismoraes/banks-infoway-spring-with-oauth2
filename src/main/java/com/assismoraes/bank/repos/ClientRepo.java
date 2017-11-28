@@ -3,11 +3,11 @@ package com.assismoraes.bank.repos;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.assismoraes.bank.models.Branch;
+import com.assismoraes.bank.models.Client;
 
 @Repository
-public interface BranchRepo extends JpaRepository<Branch, Long> {
-
-	Branch findByNumber(String number);
+public interface ClientRepo extends JpaRepository<Client, Long> {
+	
+	Client findByRegisterNumber(String registerNumber);
 
 }

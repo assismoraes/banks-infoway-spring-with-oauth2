@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -21,12 +20,10 @@ public class Transaction {
 	@CreatedDate
 	private Date createdAt;
 	
-	@NotNull
-	@ManyToOne
-	private TransactionType transactionType;
+	private String otherAccountNumber;
 	
-	@ManyToOne
-	private Account otherAccount;
+	@NotNull(message="O valor da transação é obrigatório")
+	private Double value;
 
 	public Long getId() {
 		return id;
@@ -44,19 +41,20 @@ public class Transaction {
 		this.createdAt = createdAt;
 	}
 
-	public TransactionType getTransactionType() {
-		return transactionType;
+	public String getOtherAccountNumber() {
+		return otherAccountNumber;
 	}
 
-	public void setTransactionType(TransactionType transactionType) {
-		this.transactionType = transactionType;
+	public void setOtherAccountNumber(String otherAccountNumber) {
+		this.otherAccountNumber = otherAccountNumber;
 	}
 
-	public Account getOtherAccount() {
-		return otherAccount;
+	public Double getValue() {
+		return value;
 	}
 
-	public void setOtherAccount(Account otherAccount) {
-		this.otherAccount = otherAccount;
+	public void setValue(Double value) {
+		this.value = value;
 	}
+	
 }

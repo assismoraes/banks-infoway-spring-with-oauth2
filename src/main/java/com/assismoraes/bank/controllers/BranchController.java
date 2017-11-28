@@ -1,5 +1,7 @@
 package com.assismoraes.bank.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.assismoraes.bank.errors.BankErrors;
+import com.assismoraes.bank.models.Account;
 import com.assismoraes.bank.models.Branch;
 import com.assismoraes.bank.services.BranchService;
 
@@ -25,9 +28,17 @@ public class BranchController {
 	 * @param id
 	 * @return branch
 	 */
-	@RequestMapping("{id}")
-	public Branch show(@PathVariable("id") Long id) {
-		return this.service.find(id);
+	@RequestMapping(value="{id}", method=RequestMethod.GET)
+	public Branch show(@PathVariable("id") String branchNumber) {
+		return this.service.findByNumber(branchNumber);
+	}
+	
+	/**
+	 * @return All the branches on database
+	 */
+	@RequestMapping(method=RequestMethod.GET)
+	public List<Branch> allBranches() {
+		return this.service.allBranches();
 	}
 	
 	/**
@@ -51,7 +62,21 @@ public class BranchController {
 	public Object save(@Validated @RequestBody Branch branch, Errors errors) {
 		if(errors.hasErrors())
 			return BankErrors.formatErrors(errors);
-		return this.service.update(branch);
+		this.service.update(branch);
+		return "success";
+	}
+	
+	@RequestMapping(value="{branchNumber}/accounts", method=RequestMethod.GET)
+	public List<Account> accountsByBranchId(@PathVariable("branchNumber") String branchNumber) {
+		return this.service.findByNumber(branchNumber).getAccounts();
+	}
+	
+	@RequestMapping(value="{branchNumber}/accounts", method=RequestMethod.POST)
+	public Object addAccountToABranch(@Validated @RequestBody Account account, Errors errors, @PathVariable("branchNumber") String branchNumber) {
+		if(errors.hasErrors())
+			return BankErrors.formatErrors(errors); 
+		this.service.addAccountToABranch(branchNumber, account);
+		return "success";
 	}
 
 }

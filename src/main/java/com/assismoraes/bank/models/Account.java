@@ -6,15 +6,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -22,16 +20,18 @@ import org.springframework.data.annotation.LastModifiedDate;
 public class Account {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
-	
-	@NotEmpty
 	@Column(unique=true)
 	private String number;
 	
-	@OneToOne
-	@NotNull
+	@NotNull(message="Os dados do cliente são obrigatórios")
+	@Valid
+	@OneToOne(cascade=CascadeType.ALL)
 	private Client client;
+	
+	@NotNull(message="Os dados do usuário são obrigatórios")
+	@Valid
+	@OneToOne(cascade=CascadeType.ALL)
+	private Usr usr;
 	
 	@OneToMany(cascade=CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name = "account_id")
@@ -42,14 +42,8 @@ public class Account {
 	
 	@LastModifiedDate
 	private Date updateAt;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+	
+	private Double currentBalance;
 
 	public String getNumber() {
 		return number;
@@ -90,4 +84,20 @@ public class Account {
 	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
 	}
+
+	public Usr getUsr() {
+		return usr;
+	}
+
+	public void setUsr(Usr user) {
+		this.usr = user;
+	}
+
+	public Double getCurrentBalance() {
+		return currentBalance;
+	}
+
+	public void setCurrentBalance(Double currentBalance) {
+		this.currentBalance = currentBalance;
+	}	
 }
