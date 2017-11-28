@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
 
 import com.assismoraes.bank.helpers.ClientHelper;
 import com.assismoraes.bank.models.Account;
@@ -39,6 +40,14 @@ public class TransactionService {
 		return this.accountRepo.save(account);
 	}
 	
+	public Object depositToOtherAccount(Transaction transaction, String otherAccountNumber) {
+		Account account = this.accountRepo.findByNumber(otherAccountNumber);
+		account.setCurrentBalance(account.getCurrentBalance() + transaction.getValue());
+		transaction.setCreatedAt(new Date());
+		account.getTransactions().add(transaction);
+		return this.accountRepo.save(account);
+	}
+	
 	public Object transfer(Transaction transaction, String otherAccountNumber) {
 		Double transactionValue = transaction.getValue();		
 		//debit
@@ -65,12 +74,51 @@ public class TransactionService {
 		return "success";
 	}
 	
-	public List<Transaction> all() {
-		return this.repo.findAll();
+	public List<Transaction> allMyTransactions() {
+		return this.currentAccount().getTransactions();
+	}
+	
+	public void verifyInsufficientFunds(Transaction transaction, Errors errors) {
+		Account account = this.currentAccount();
+		if(transaction.getValue() == null){
+			errors.rejectValue("value", "value", "O valor da transação é obrigatório");
+			return;
+		}
+		this.verifyValueOfDeposit(transaction, errors);
+		if(account.getCurrentBalance() < transaction.getValue())
+			errors.rejectValue("value", "value", "Saldo insuficiente");
+	}
+	
+	public void verifyValueOfDeposit(Transaction transaction, Errors errors) {
+		if(transaction.getValue() == null){
+			errors.rejectValue("value", "value", "O valor da transação é obrigatório");
+			return;
+		}
+		if(transaction.getValue() <= 0)
+			errors.rejectValue("value", "value", "Valor inválido");
+	}
+	
+	public void verifyConditionsToTransfer(Transaction transaction, Errors errors, String accountNumber) {
+		if(transaction.getValue() == null){
+			errors.rejectValue("value", "value", "O valor da transação é obrigatório");
+			return;
+		}
+		this.verifyInsufficientFunds(transaction, errors);
+		this.verifyValueOfDeposit(transaction, errors);
+		if(!this.accountExists(accountNumber))
+			errors.rejectValue("value", "value", "Conta inexistente");
+	}
+	
+	public void verifyIfAccountExists(Errors errors, String otherAccountNumber) {
+		if(!this.accountExists(otherAccountNumber))
+			errors.rejectValue("value", "value", "Conta inexistente");
+	}
+	
+	private Boolean accountExists(String accountNumber) {
+		return this.accountRepo.findByNumber(accountNumber) == null ? false : true;
 	}
 	
 	private Account currentAccount() {
 		return this.accountRepo.findByNumber(ClientHelper.loggedUser().getName());
 	}	
-
 }

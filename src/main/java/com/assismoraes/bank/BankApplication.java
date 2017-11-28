@@ -22,7 +22,7 @@ public class BankApplication {
 	@Autowired
 	public void authenticationManage(AuthenticationManagerBuilder builder, UserRepository repo) throws Exception {
 		if(repo.count() == 0)
-			repo.save(new Usr("user", "user", Arrays.asList(new Role("USER"), new Role("ACTUATOR"))));
+			repo.save(new Usr("admin", "admin", Arrays.asList(new Role("ADMIN"))));
 		builder.userDetailsService((UserDetailsService) param -> new CustomUserDetails(repo.findByUsername(param)));
 	}
 }

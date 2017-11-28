@@ -24,11 +24,12 @@ public class TransactionController {
 	
 	@RequestMapping
 	public List<Transaction> all() {
-		return this.service.all();
+		return this.service.allMyTransactions();
 	}
 
 	@RequestMapping(value="cashOut", method=RequestMethod.POST)
 	public Object cashOut(@Validated @RequestBody Transaction transaction, Errors errors) {
+		this.service.verifyInsufficientFunds(transaction, errors);
 		if(errors.hasErrors())
 			return BankErrors.formatErrors(errors);
 		this.service.cashOut(transaction);
@@ -37,15 +38,28 @@ public class TransactionController {
 	
 	@RequestMapping(value="deposit", method=RequestMethod.POST)
 	public Object deposit(@Validated @RequestBody Transaction transaction, Errors errors) {
+		this.service.verifyValueOfDeposit(transaction, errors);
 		if(errors.hasErrors())
 			return BankErrors.formatErrors(errors);
 		this.service.deposit(transaction);
 		return "success";
 	}
 	
+	@RequestMapping(value="deposit/{otherAccountNumber}", method=RequestMethod.POST)
+	public Object depositToOtherAccount(@Validated @RequestBody Transaction transaction, Errors errors,
+			@PathVariable("otherAccountNumber") String otherAccountNumber) {
+		this.service.verifyValueOfDeposit(transaction, errors);
+		this.service.verifyIfAccountExists(errors, otherAccountNumber);
+		if(errors.hasErrors())
+			return BankErrors.formatErrors(errors);
+		this.service.depositToOtherAccount(transaction, otherAccountNumber);
+		return "success";
+	}
+	
 	@RequestMapping(value="transfer/{otherAccountNumber}", method=RequestMethod.POST)
 	public Object transfer(@Validated @RequestBody Transaction transaction, Errors errors, 
 			@PathVariable("otherAccountNumber") String otherAccountNumber) {
+		this.service.verifyConditionsToTransfer(transaction, errors, otherAccountNumber);
 		if(errors.hasErrors())
 			return BankErrors.formatErrors(errors);
 		this.service.transfer(transaction, otherAccountNumber);
