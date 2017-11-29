@@ -26,5 +26,10 @@ public class UsrController {
 			throw new InvalidRequestException("Usuário inválido", errors);
 		this.service.updatePassword(usrEditable.getNewPassword());
 		return "success";
-	}	
+	}
+	
+	@RequestMapping(value="getCurrentBalance", method=RequestMethod.POST)
+	public Double getCurrentBalance() {
+		return this.service.getCurrentBalance();
+	}
 }

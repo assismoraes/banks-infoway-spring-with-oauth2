@@ -48,8 +48,11 @@ public class UsrService {
 			errors.rejectValue("newPasswordConfirm", "newPasswordConfirm", "A senha de confirmação está incorreta");
 	}
 	
-	private Boolean incorrectPassword(String password) {
-		return !this.accountRepo.findByNumber(ClientHelper.loggedUser().getName()).getUsr().getPassword().equals(password);
+	public Double getCurrentBalance() {
+		return this.accountRepo.findByNumber(ClientHelper.loggedUser().getName()).getCurrentBalance();
 	}
 	
+	private Boolean incorrectPassword(String password) {
+		return !this.accountRepo.findByNumber(ClientHelper.loggedUser().getName()).getUsr().getPassword().equals(password);
+	}	
 }
