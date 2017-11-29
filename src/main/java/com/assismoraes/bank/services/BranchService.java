@@ -14,6 +14,7 @@ import com.assismoraes.bank.models.Role;
 import com.assismoraes.bank.models.Transaction;
 import com.assismoraes.bank.models.Usr;
 import com.assismoraes.bank.repos.BranchRepo;
+import com.assismoraes.bank.repos.RoleRepo;
 
 @Service
 public class BranchService {
@@ -29,6 +30,9 @@ public class BranchService {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RoleRepo roleRepo;
 
 	public Object update(Branch branch) {
 		Branch b = this.repo.findByNumber(branch.getNumber());
@@ -52,7 +56,7 @@ public class BranchService {
 		Branch branch = this.repo.findByNumber(branchNumber);
 		account.setNumber(branch.getNumber() + this.accountService.generateAccountNumber());
 		
-		Usr usr = new Usr(account.getNumber(), account.getUsr().getPassword(), new ArrayList<Role>());
+		Usr usr = new Usr(account.getNumber(), account.getUsr().getPassword(), roleRepo.findByName("ROLE_USER"));
 		usr = (Usr) this.userService.saveUser(usr);
 		
 		Client client = new Client();

@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -21,7 +21,7 @@ public class Usr {
 	@NotEmpty(message="A senha é obrigatória")
 	private String password;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Role> roles;
 	
 	public Usr () {}
