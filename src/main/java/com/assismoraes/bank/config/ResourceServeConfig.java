@@ -17,6 +17,7 @@ public class ResourceServeConfig extends ResourceServerConfigurerAdapter {
 			.antMatchers("/api/branch/**").hasRole("ADMIN")
 			.antMatchers("/api/account/**").hasRole("ADMIN")
 			.antMatchers("/api/transaction/**").hasRole("USER")
+			.antMatchers("/api/usr/**").hasRole("USER")
 			.anyRequest()
 			.authenticated();
 	}
