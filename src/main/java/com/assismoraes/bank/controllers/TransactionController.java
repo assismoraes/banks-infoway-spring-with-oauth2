@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.assismoraes.bank.errors.BankErrors;
+import com.assismoraes.bank.exceptions.InvalidRequestException;
 import com.assismoraes.bank.models.Transaction;
 import com.assismoraes.bank.services.TransactionService;
 
@@ -37,7 +37,7 @@ public class TransactionController {
 	public Object cashOut(@Validated @RequestBody Transaction transaction, Errors errors) {
 		this.service.verifyInsufficientFunds(transaction, errors);
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Transação inválida", errors);
 		this.service.cashOut(transaction);
 		return "success";
 	}
@@ -46,7 +46,7 @@ public class TransactionController {
 	public Object deposit(@Validated @RequestBody Transaction transaction, Errors errors) {
 		this.service.verifyValueOfDeposit(transaction, errors);
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Transação inválida", errors); 
 		this.service.deposit(transaction);
 		return "success";
 	}
@@ -57,7 +57,7 @@ public class TransactionController {
 		this.service.verifyValueOfDeposit(transaction, errors);
 		this.service.verifyIfAccountExists(errors, otherAccountNumber);
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Transação inválida", errors);
 		this.service.depositToOtherAccount(transaction, otherAccountNumber);
 		return "success";
 	}
@@ -67,7 +67,7 @@ public class TransactionController {
 			@PathVariable("otherAccountNumber") String otherAccountNumber) {
 		this.service.verifyConditionsToTransfer(transaction, errors, otherAccountNumber);
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Transação inválida", errors);
 		this.service.transfer(transaction, otherAccountNumber);
 		return "success";
 	}

@@ -10,7 +10,6 @@ import com.assismoraes.bank.helpers.StringHelper;
 import com.assismoraes.bank.models.Account;
 import com.assismoraes.bank.models.Branch;
 import com.assismoraes.bank.models.Client;
-import com.assismoraes.bank.models.Role;
 import com.assismoraes.bank.models.Transaction;
 import com.assismoraes.bank.models.Usr;
 import com.assismoraes.bank.repos.BranchRepo;
@@ -36,8 +35,8 @@ public class BranchService {
 
 	public Object update(Branch branch) {
 		Branch b = this.repo.findByNumber(branch.getNumber());
-		branch.setAccounts(b.getAccounts());
-		return this.repo.save(branch);
+		b.setName(branch.getName());
+		return this.repo.save(b);
 	}
 
 	public Branch findByNumber(String branchNumber) {

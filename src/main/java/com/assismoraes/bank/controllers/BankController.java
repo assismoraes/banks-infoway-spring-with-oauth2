@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.assismoraes.bank.errors.BankErrors;
+import com.assismoraes.bank.exceptions.InvalidRequestException;
 import com.assismoraes.bank.models.Bank;
 import com.assismoraes.bank.models.Branch;
 import com.assismoraes.bank.services.BankService;
@@ -38,7 +38,7 @@ public class BankController {
 	@RequestMapping(method=RequestMethod.POST)
 	public Object save(@Validated @RequestBody Bank bank, Errors errors) {
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Banco inválido", errors);
 		this.service.save(bank);
 		return "success";
 	}
@@ -52,7 +52,7 @@ public class BankController {
 	@RequestMapping(method=RequestMethod.PUT)
 	public Object update(@Validated @RequestBody Bank bank, Errors errors) {
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Banco inválido", errors);
 		this.service.update(bank);
 		return "success";
 	}	
@@ -98,7 +98,7 @@ public class BankController {
 	@RequestMapping(value="{bankId}/branches", method=RequestMethod.POST)
 	public Object addBranch(@Validated @RequestBody Branch branch, Errors errors, @PathVariable("bankId") Long bankId) {
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Agência inválida", errors);
 		this.service.addBranchToABank(bankId, branch);
 		return "success";
 	}

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.assismoraes.bank.errors.BankErrors;
+import com.assismoraes.bank.exceptions.InvalidRequestException;
 import com.assismoraes.bank.models.Account;
 import com.assismoraes.bank.models.Branch;
 import com.assismoraes.bank.services.BranchService;
@@ -61,7 +61,7 @@ public class BranchController {
 	@RequestMapping(method=RequestMethod.PUT)
 	public Object save(@Validated @RequestBody Branch branch, Errors errors) {
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors);
+			throw new InvalidRequestException("Agência inválida", errors); 
 		this.service.update(branch);
 		return "success";
 	}
@@ -74,7 +74,7 @@ public class BranchController {
 	@RequestMapping(value="{branchNumber}/accounts", method=RequestMethod.POST)
 	public Object addAccountToABranch(@Validated @RequestBody Account account, Errors errors, @PathVariable("branchNumber") String branchNumber) {
 		if(errors.hasErrors())
-			return BankErrors.formatErrors(errors); 
+			throw new InvalidRequestException("Agência inválida", errors); 
 		this.service.addAccountToABranch(branchNumber, account);
 		return "success";
 	}
