@@ -2,6 +2,7 @@ package com.assismoraes.bank.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,16 +12,12 @@ import com.assismoraes.bank.helpers.ClientHelper;
 import com.assismoraes.bank.models.Account;
 import com.assismoraes.bank.models.Transaction;
 import com.assismoraes.bank.repos.AccountRepo;
-import com.assismoraes.bank.repos.TransationRepo;
 
 @Service
 public class TransactionService {
 		
 	@Autowired
 	private AccountRepo accountRepo;
-	
-	@Autowired
-	private TransationRepo repo;
 	
 	public Object cashOut(Transaction transaction) {
 		Double transactionValue = transaction.getValue();
@@ -76,6 +73,13 @@ public class TransactionService {
 	
 	public List<Transaction> allMyTransactions() {
 		return this.currentAccount().getTransactions();
+	}
+	
+	public List<Transaction> allMyTransactionsByDate(String begin, String finish) {
+		Date beginDate = new Date(new Long(begin));
+		Date finishDate = new Date(new Long(finish));		
+		return (List<Transaction>) this.currentAccount().getTransactions().stream()
+				.filter(t -> t.getCreatedAt().after(beginDate) && t.getCreatedAt().before(finishDate)).collect(Collectors.toList());
 	}
 	
 	public void verifyInsufficientFunds(Transaction transaction, Errors errors) {

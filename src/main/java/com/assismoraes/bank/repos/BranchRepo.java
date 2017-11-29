@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.assismoraes.bank.models.Branch;
 
 @Repository
-public interface BranchRepo extends JpaRepository<Branch, Long> {
+public interface BranchRepo extends JpaRepository<Branch, String> {
 
 	Branch findByNumber(String number);
 

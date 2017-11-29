@@ -40,7 +40,7 @@ public class BranchService {
 		return this.repo.findByNumber(branchNumber);
 	}
 
-	public void delete(Long id) {
+	public void delete(String id) {
 		this.repo.delete(id);
 	}
 

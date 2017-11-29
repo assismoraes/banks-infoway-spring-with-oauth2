@@ -43,20 +43,8 @@ public class AccountService {
 		return this.repo.findAll();
 	}
 
-	public Account showOne(String accountNumber) {
+	public Account findByNumber(String accountNumber) {
 		return this.repo.findByNumber(accountNumber);
-	}
-
-	public Account update(Account account) {
-		Account a = this.repo.findByNumber(account.getNumber());
-		
-		Client client = this.clientRepo.findByRegisterNumber(account.getClient().getRegisterNumber());
-		client.setName(account.getClient().getName());
-		client.setRegisterNumber(account.getClient().getRegisterNumber());
-		client = this.clientRepo.save(client);
-		a.setClient(client);
-		
-		return this.repo.save(a);
 	}
 
 	public void delete(Long id) {

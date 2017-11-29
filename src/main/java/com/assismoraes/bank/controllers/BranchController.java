@@ -47,7 +47,7 @@ public class BranchController {
 	 * @return message of success
 	 */
 	@RequestMapping(value="{id}", method=RequestMethod.DELETE)
-	public String delete(@PathVariable("id") Long id) {
+	public String delete(@PathVariable("id") String id) {
 		this.service.delete(id);
 		return "success";
 	}
